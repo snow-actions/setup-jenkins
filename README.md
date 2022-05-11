@@ -1,50 +1,31 @@
-[![Test](https://github.com/snow-actions/composite-action-template/actions/workflows/test.yml/badge.svg)](https://github.com/snow-actions/composite-action-template/actions/workflows/test.yml)
+[![Test](https://github.com/snow-actions/setup-jenkins/actions/workflows/test.yml/badge.svg)](https://github.com/snow-actions/setup-jenkins/actions/workflows/test.yml)
 
-# Create a Composite Action
+# Setup Jenkins
 
-Click the `Use this template` to bootstrap the creation of a [composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action).:rocket:
-
-This template includes tests, a validation workflow and versioning guidance.
-
-Learn how to use this template at [Wiki](https://github.com/snow-actions/composite-action-template/wiki).
+Set up Jenkins container (PoC).
+A few features are available.
 
 ## Usage
 
-See [action.yml](action.yml)
-
-### Basic
-
-```yml
-steps:
-  - uses: snow-actions/composite-action-template@v1.0.0
-```
-
-### Optional
+1. Copy $JENKINS_HOME/jobs/*/config.xml from existing Jenkins to jenkins_home/ in a repository
+1. Create a workflow with the jenkins_home path
 
 ```yml
 steps:
-  - uses: snow-actions/composite-action-template@v1.0.0
+  - uses: actions/checkout@v3
+  - uses: snow-actions/setup-jenkins@v0.1.0
     with:
-      who-to-greet: Your name
+      jenkins_home: jenkins_home
 ```
-
-## Environment variables
-
-| Name | Description | Default | Required |
-| - | - | - | - |
-| `WHO_TO_GREET` | Who to greet | `World` | no |
 
 ## Inputs
 
+See [action.yml](action.yml)
+
 | Name | Description | Default | Required |
 | - | - | - | - |
-| `who-to-greet` | Who to greet | `World` | yes |
-
-## Outputs
-
-| Name | Description |
-| - | - |
-| `greet` | The word we greeted you |
+| `jenkins_home` | jenkins_home path which will mounted to /var/jenkins_home | `./jenkins_home` | no |
+| `jenkins_version` | [Jenkins image](https://hub.docker.com/r/jenkins/jenkins) version | `lts-jdk11` | no |
 
 ## Supported
 
@@ -52,24 +33,16 @@ steps:
 
 - `ubuntu-20.04`
 - `ubuntu-18.04`
-- `windows-2022`
-- `windows-2019`
-- `macos-11`
-- `macos-10.15`
 - `self-hosted`
 
 ### Events
 
 - Any
-<!--
-- `push`
-- `pull_request`
--->
 
 ## Dependencies
 
-- [actions/cache](https://github.com/actions/cache) >= 3.0.0
-- [GitHub CLI](https://cli.github.com/) >= 2.6.0
+- [Docker Compose V2](https://docs.docker.com/compose/)
+- [Jenkins](https://hub.docker.com/r/jenkins/jenkins)
 
 ## Contributing
 

@@ -1,26 +1,44 @@
-name: 'Composite Action Template'
-description: 'Get started with Composite actions'
+name: Setup Jenkins
+description: Set up Jenkins container
+author: SnowCait
+branding:
+  icon: circle
+  color: blue
 inputs:
-  who-to-greet:
-    description: 'Who to greet'
-    required: true
-    default: 'World'
-outputs:
-  greet:
-    description: 'The word we greeted you'
-    value: ${{ steps.greet.outputs.word }}
+  jenkins_home:
+    description: jenkins_home path which will mounted to /var/jenkins_home
+    required: false
+    default: ./jenkins_home
+  jenkins_version:
+    description: Jenkins image version
+    required: false
+    default: lts-jdk11
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - id: greet
+    - run: docker version
+      shell: bash
+    - run: docker compose version
+      shell: bash
+    - name: Set env
       run: |
-        GREET="Hello ${WHO}"
-        echo "${GREET}"
-        echo "${GREET}" > greet.txt
-        echo "::set-output name=word::${GREET}"
+        set -x
+        if [[ "$JENKINS_HOME" == "/*" ]]; then
+          echo "JENKINS_HOME=${JENKINS_HOME}" >> $GITHUB_ENV
+        else
+          echo "JENKINS_HOME=$(pwd)/${JENKINS_HOME}" >> $GITHUB_ENV
+        fi
+        echo "JENKINS_VERSION=${JENKINS_VERSION}" >> $GITHUB_ENV
+        cat $GITHUB_ENV
       shell: bash
       env:
-        WHO: ${{ inputs.who-to-greet }}
-branding:
-  icon: 'award'  
-  color: 'green'
+        JENKINS_HOME: ${{ inputs.jenkins_home }}
+        JENKINS_VERSION: ${{ inputs.jenkins_version }}
+    - run: |
+        mkdir -p $JENKINS_HOME
+        sudo chown -R 1000:1000 $JENKINS_HOME
+      shell: bash
+    - run: docker compose -f ${GITHUB_ACTION_PATH}/compose.yaml config
+      shell: bash
+    - run: docker compose -f ${GITHUB_ACTION_PATH}/compose.yaml up -d --wait
+      shell: bash

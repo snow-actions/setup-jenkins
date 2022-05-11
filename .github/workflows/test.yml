@@ -19,6 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./
+        with:
+          jenkins_home: test-resources/jenkins_home
       - run: curl http://localhost:8080/
       - id: crumb
         run: |

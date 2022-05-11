@@ -22,11 +22,8 @@ jobs:
         with:
           jenkins_home: test-resources/jenkins_home
       - run: curl http://localhost:8080/
-      - id: crumb
-        run: |
+      - run: |
           crumb=$(curl -s -c cookie http://localhost:8080/crumbIssuer/api/json)
-          echo $crumb
-          echo "::set-output name=json::${crumb}"
           echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
       - run: curl -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs'
       - run: curl -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/job/job-1/build

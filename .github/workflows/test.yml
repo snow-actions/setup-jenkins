@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  test-mount:
     strategy:
       fail-fast: false
       matrix:
@@ -27,3 +27,20 @@ jobs:
           echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
       - run: curl -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs'
       - run: curl -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/job/job-1/build
+
+  test-no-mount:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-18.04 ]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+      - run: curl http://localhost:8080/
+      - run: |
+          crumb=$(curl -s -c cookie http://localhost:8080/crumbIssuer/api/json)
+          echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
+      - run: curl -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs'

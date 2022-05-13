@@ -8,7 +8,6 @@ inputs:
   jenkins_home:
     description: jenkins_home path which will mounted to /var/jenkins_home
     required: false
-    default: ./jenkins_home
   jenkins_version:
     description: Jenkins image version
     required: false
@@ -23,7 +22,9 @@ runs:
     - name: Set env
       run: |
         set -x
-        if [[ "$JENKINS_HOME" == "/*" ]]; then
+        if [[ "$JENKINS_HOME" == "" ]]; then
+          echo "JENKINS_HOME=" >> $GITHUB_ENV
+        elif [[ "$JENKINS_HOME" == "/*" ]]; then
           echo "JENKINS_HOME=${JENKINS_HOME}" >> $GITHUB_ENV
         else
           echo "JENKINS_HOME=$(pwd)/${JENKINS_HOME}" >> $GITHUB_ENV
@@ -34,11 +35,19 @@ runs:
       env:
         JENKINS_HOME: ${{ inputs.jenkins_home }}
         JENKINS_VERSION: ${{ inputs.jenkins_version }}
+    - name: COMPOSE_FILE
+      run: |
+        if [[ "${JENKINS_HOME}" == "" ]]; then
+          echo "COMPOSE_FILE=${GITHUB_ACTION_PATH}/compose.yaml" >> $GITHUB_ENV
+        else
+          echo "COMPOSE_FILE=${GITHUB_ACTION_PATH}/compose.yaml:${GITHUB_ACTION_PATH}/compose.mount.yaml" >> $GITHUB_ENV
+        fi
+      shell: bash
     - run: |
         mkdir -p $JENKINS_HOME
         sudo chown -R 1000:1000 $JENKINS_HOME
       shell: bash
-    - run: docker compose -f ${GITHUB_ACTION_PATH}/compose.yaml config
+    - run: docker compose config
       shell: bash
-    - run: docker compose -f ${GITHUB_ACTION_PATH}/compose.yaml up -d --wait
+    - run: docker compose up -d --wait
       shell: bash

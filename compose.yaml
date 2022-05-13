@@ -7,8 +7,6 @@ services:
     ports:
       - 8080:8080
       - 50000:50000
-    volumes:
-      - ${JENKINS_HOME}:/var/jenkins_home
     privileged: true
     environment:
       - JAVA_OPTS="-Djenkins.install.runSetupWizard=false"

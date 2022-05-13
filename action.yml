@@ -47,6 +47,7 @@ runs:
         mkdir -p $JENKINS_HOME
         sudo chown -R 1000:1000 $JENKINS_HOME
       shell: bash
+      if: env.JENKINS_HOME != ''
     - run: docker compose config
       shell: bash
     - run: docker compose up -d --wait

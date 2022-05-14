@@ -39,6 +39,10 @@ See [action.yml](action.yml)
 | `JENKINS_URL` | Jenkins URL: http://localhost:8080 |
 | `COMPOSE_FILE` | You can access Jenkins container by `docker compose` command |
 
+## Examples
+
+See [test.yml](.github/workflows/test.yml)
+
 ## Supported
 
 ### Runners

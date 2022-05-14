@@ -23,10 +23,10 @@ jobs:
           jenkins_home: test-resources/jenkins_home
       - run: curl http://localhost:8080/
       - run: |
-          crumb=$(curl -s -c cookie http://localhost:8080/crumbIssuer/api/json)
+          crumb=$(curl -sS -c cookie http://localhost:8080/crumbIssuer/api/json)
           echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
-      - run: curl -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs'
-      - run: curl -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/job/job-1/build
+      - run: test $(curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs | length') -eq 1
+      - run: curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/job/job-1/build
 
   test-no-mount:
     strategy:
@@ -41,6 +41,14 @@ jobs:
       - uses: ./
       - run: curl http://localhost:8080/
       - run: |
-          crumb=$(curl -s -c cookie http://localhost:8080/crumbIssuer/api/json)
+          crumb=$(curl -sS -c cookie http://localhost:8080/crumbIssuer/api/json)
           echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
-      - run: curl -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs'
+      - run: test $(curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs | length') -eq 0
+
+  test-passing:
+    needs: [ test-mount, test-no-mount ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - run: echo "All tests have passed."

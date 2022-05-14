@@ -1,0 +1,7 @@
+.env
+jenkins-cli.jar
+
+/test-resources/jenkins_home/*
+!/test-resources/jenkins_home/jobs/
+/test-resources/jenkins_home/jobs/*/*
+!/test-resources/jenkins_home/jobs/*/config.xml

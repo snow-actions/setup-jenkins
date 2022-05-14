@@ -16,6 +16,9 @@ steps:
   - uses: snow-actions/setup-jenkins@v0.1.0
     with:
       jenkins_home: jenkins_home
+  - run: wget http://localhost:8080/jnlpJars/jenkins-cli.jar
+  - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket help
+  - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket build job-1 -f -v -p param_1=p1
 ```
 
 ## Inputs

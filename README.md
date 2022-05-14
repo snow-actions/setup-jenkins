@@ -37,7 +37,7 @@ See [action.yml](action.yml)
 | `JENKINS_HOME` | Path to jenkins_home |
 | `JENKINS_VERSION` | Jenkins version |
 | `JENKINS_URL` | Jenkins URL: http://localhost:8080 |
-| `COMPOSE_FILE` | Docker Compose variable as same as `--file`, `-f` option<br>You can access Jenkins container by `docker compose exec jenkins bash` |
+| `COMPOSE_FILE` | Docker Compose variable as same as `--file`, `-f` option<br>You can access Jenkins container by `docker compose exec jenkins <command>` |
 
 ## Examples
 

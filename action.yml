@@ -53,3 +53,5 @@ runs:
       shell: bash
       env:
         JENKINS_IMAGE_TAG: ${{ inputs.jenkins_image_tag }}
+    - run: echo "JENKINS_VERSION=$(docker compose exec jenkins printenv JENKINS_VERSION)" >> $GITHUB_ENV
+      shell: bash

@@ -23,6 +23,9 @@ jobs:
           jenkins_home: test-resources/jenkins_home
       - run: curl http://localhost:8080/
 
+      # Environment variables
+      - run: test -n "$JENKINS_HOME"
+
       # Remote Access API
       # https://www.jenkins.io/doc/book/using/remote-access-api/
       - run: |

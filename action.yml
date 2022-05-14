@@ -8,8 +8,8 @@ inputs:
   jenkins_home:
     description: jenkins_home path which will mounted to /var/jenkins_home
     required: false
-  jenkins_version:
-    description: Jenkins image version
+  jenkins_image_tag:
+    description: Jenkins image tag
     required: false
     default: lts-jdk11
 runs:
@@ -29,12 +29,10 @@ runs:
         else
           echo "JENKINS_HOME=$(pwd)/${JENKINS_HOME}" >> $GITHUB_ENV
         fi
-        echo "JENKINS_VERSION=${JENKINS_VERSION}" >> $GITHUB_ENV
-        cat $GITHUB_ENV
+        echo "JENKINS_URL=http://localhost:8080" >> $GITHUB_ENV
       shell: bash
       env:
         JENKINS_HOME: ${{ inputs.jenkins_home }}
-        JENKINS_VERSION: ${{ inputs.jenkins_version }}
     - name: COMPOSE_FILE
       run: |
         if [[ "${JENKINS_HOME}" == "" ]]; then
@@ -50,5 +48,11 @@ runs:
       if: env.JENKINS_HOME != ''
     - run: docker compose config
       shell: bash
+      env:
+        JENKINS_IMAGE_TAG: ${{ inputs.jenkins_image_tag }}
     - run: docker compose up -d --wait
+      shell: bash
+      env:
+        JENKINS_IMAGE_TAG: ${{ inputs.jenkins_image_tag }}
+    - run: echo "JENKINS_VERSION=$(docker compose exec jenkins printenv JENKINS_VERSION)" >> $GITHUB_ENV
       shell: bash

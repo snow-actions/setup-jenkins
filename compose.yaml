@@ -3,7 +3,7 @@ services:
     build:
       context: .
       args:
-        version: ${JENKINS_VERSION}
+        tag: ${JENKINS_IMAGE_TAG}
     ports:
       - 8080:8080
       - 50000:50000

@@ -44,3 +44,11 @@ jobs:
           crumb=$(curl -sS -c cookie http://localhost:8080/crumbIssuer/api/json)
           echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
       - run: test $(curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs | length') -eq 0
+
+  test-passing:
+    needs: [ test-mount, test-no-mount ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - run: echo "All tests have passed."

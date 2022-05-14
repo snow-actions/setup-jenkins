@@ -7,7 +7,7 @@ A few features are available.
 
 ## Usage
 
-1. Copy $JENKINS_HOME/jobs/*/config.xml from existing Jenkins to jenkins_home/ in a repository
+1. Copy `$JENKINS_HOME/jobs/*/config.xml` from existing Jenkins to `jenkins_home/` in a repository
 1. Create a workflow with the jenkins_home path
 
 ```yml

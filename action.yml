@@ -29,6 +29,7 @@ runs:
         else
           echo "JENKINS_HOME=$(pwd)/${JENKINS_HOME}" >> $GITHUB_ENV
         fi
+        echo "JENKINS_URL=http://localhost:8080/" >> $GITHUB_ENV
       shell: bash
       env:
         JENKINS_HOME: ${{ inputs.jenkins_home }}

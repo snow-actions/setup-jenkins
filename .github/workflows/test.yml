@@ -26,6 +26,7 @@ jobs:
       # Environment variables
       - run: test -n "$JENKINS_HOME"
       - run: test -n "$JENKINS_VERSION"
+      - run: test -n "$JENKINS_URL"
 
       # Remote Access API
       # https://www.jenkins.io/doc/book/using/remote-access-api/

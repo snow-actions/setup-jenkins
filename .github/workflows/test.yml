@@ -22,11 +22,22 @@ jobs:
         with:
           jenkins_home: test-resources/jenkins_home
       - run: curl http://localhost:8080/
+
+      # Remote Access API
+      # https://www.jenkins.io/doc/book/using/remote-access-api/
       - run: |
           crumb=$(curl -sS -c cookie http://localhost:8080/crumbIssuer/api/json)
           echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
       - run: test $(curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs | length') -eq 1
       - run: curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/job/job-1/build
+
+      # Jenkins CLI
+      # https://www.jenkins.io/doc/book/managing/cli/
+      - run: wget http://localhost:8080/jnlpJars/jenkins-cli.jar
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket help
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket list-plugins
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket list-jobs
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket build job-1 -f -v
 
   test-no-mount:
     strategy:
@@ -40,10 +51,23 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./
       - run: curl http://localhost:8080/
+
+      # Remote Access API
+      # https://www.jenkins.io/doc/book/using/remote-access-api/
       - run: |
           crumb=$(curl -sS -c cookie http://localhost:8080/crumbIssuer/api/json)
           echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
       - run: test $(curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie http://localhost:8080/api/json | jq '.jobs | length') -eq 0
+
+      # Jenkins CLI
+      # https://www.jenkins.io/doc/book/managing/cli/
+      - run: wget http://localhost:8080/jnlpJars/jenkins-cli.jar
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket help
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket list-plugins
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket list-jobs
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket create-job job-1 < test-resources/jenkins_home/jobs/job-1/config.xml
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket list-jobs
+      - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket build job-1 -f -v
 
   test-passing:
     needs: [ test-mount, test-no-mount ]

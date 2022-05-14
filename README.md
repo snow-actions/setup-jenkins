@@ -16,9 +16,9 @@ steps:
   - uses: snow-actions/setup-jenkins@v0.1.0
     with:
       jenkins_home: jenkins_home
-  - run: wget http://localhost:8080/jnlpJars/jenkins-cli.jar
-  - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket help
-  - run: java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket build job-1 -f -v -p param_1=p1
+  - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
+  - run: java -jar jenkins-cli.jar -webSocket help
+  - run: java -jar jenkins-cli.jar -webSocket build job-1 -f -v -p param_1=p1
 ```
 
 ## Inputs
@@ -29,6 +29,15 @@ See [action.yml](action.yml)
 | - | - | - | - |
 | `jenkins_home` | jenkins_home path which will mounted to /var/jenkins_home | empty<br>(not mount) | no |
 | `jenkins_image` | [Jenkins image](https://hub.docker.com/r/jenkins/jenkins) tag | `lts-jdk11` | no |
+
+## Output environment variables
+
+| Name | Description |
+| - | - |
+| `JENKINS_HOME` | Path to jenkins_home |
+| `JENKINS_VERSION` | Jenkins version |
+| `JENKINS_URL` | Jenkins URL: http://localhost:8080 |
+| `COMPOSE_FILE` | You can access Jenkins container by `docker compose` command |
 
 ## Supported
 

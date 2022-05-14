@@ -27,6 +27,7 @@ jobs:
       - run: test -n "$JENKINS_HOME"
       - run: test -n "$JENKINS_VERSION"
       - run: test -n "$JENKINS_URL"
+      - run: test -n "$COMPOSE_FILE"
 
       # Remote Access API
       # https://www.jenkins.io/doc/book/using/remote-access-api/
@@ -44,6 +45,12 @@ jobs:
       - run: java -jar jenkins-cli.jar -webSocket list-jobs
       - run: java -jar jenkins-cli.jar -webSocket build job-1 -f -v
       - run: java -jar jenkins-cli.jar -webSocket build job-2 -f -v -p param_1=p1
+
+      # Access Jenkins container
+      # https://github.com/jenkinsci/docker
+      - run: docker compose ps
+      - run: docker compose run --rm jenkins --version
+      - run: docker compose exec jenkins jenkins-plugin-cli --list
 
   test-no-mount:
     strategy:

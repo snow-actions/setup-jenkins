@@ -13,7 +13,7 @@ A few features are available.
 ```yml
 steps:
   - uses: actions/checkout@v3
-  - uses: snow-actions/setup-jenkins@v0.1.0
+  - uses: snow-actions/setup-jenkins@v0.2.0
     with:
       jenkins_home: jenkins_home
   - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar

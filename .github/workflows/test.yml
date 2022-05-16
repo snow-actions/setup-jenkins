@@ -106,7 +106,7 @@ jobs:
       - run: curl $JENKINS_URL
 
       # Environment variables
-      - run: test -n "$JENKINS_HOME"
+      - run: test "$JENKINS_HOME" = ""
       - run: test -n "$JENKINS_VERSION"
       - run: test "$JENKINS_URL" = "http://localhost:8080"
       - run: test -n "$COMPOSE_FILE"

@@ -28,7 +28,7 @@ runs:
         if [[ "$JENKINS_HOME" == "" ]]; then
           echo "JENKINS_HOME=" >> $GITHUB_ENV
         else
-          echo "JENKINS_HOME=$(realpath ${JENKINS_HOME})" >> $GITHUB_ENV
+          echo "JENKINS_HOME=$(realpath $JENKINS_HOME)" >> $GITHUB_ENV
         fi
         echo "JENKINS_URL=http://localhost:8080" >> $GITHUB_ENV
       shell: bash
@@ -38,7 +38,7 @@ runs:
       run: |
         set -x
         ACTION_PATH=$(realpath $GITHUB_ACTION_PATH)
-        if [[ "${JENKINS_HOME}" == "" ]]; then
+        if [[ "$JENKINS_HOME" == "" ]]; then
           echo "COMPOSE_FILE=$ACTION_PATH/compose.yaml" >> $GITHUB_ENV
         else
           echo "COMPOSE_FILE=$ACTION_PATH/compose.yaml:$ACTION_PATH/compose.mount.yaml" >> $GITHUB_ENV

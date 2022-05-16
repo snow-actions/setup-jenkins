@@ -130,6 +130,44 @@ jobs:
       - run: java -jar jenkins-cli.jar -webSocket build job-1 -f -v
       - run: java -jar jenkins-cli.jar -webSocket build job-2 -f -v -p param_1=p1
 
+  test-jcasc:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-18.04 ]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: cp test-resources/jenkins.yaml test-resources/jenkins_home/
+      - uses: ./
+      - run: curl $JENKINS_URL
+      - run: ls -la $JENKINS_HOME
+
+      # Environment variables
+      - run: test "$JENKINS_HOME" = "$RUNNER_TEMP/jenkins_home"
+      - run: test -n "$JENKINS_VERSION"
+      - run: test "$JENKINS_URL" = "http://localhost:8080"
+      - run: test -n "$COMPOSE_FILE"
+
+      # Jenkins container
+      - run: docker compose exec jenkins printenv
+      - run: docker compose exec jenkins jenkins-plugin-cli --list
+
+      # Remote Access API
+      - run: |
+          crumb=$(curl -sS -c cookie $JENKINS_URL/crumbIssuer/api/json)
+          echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
+      - run: test $(curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie $JENKINS_URL/api/json | jq '.jobs | length') -eq 0
+
+      # Jenkins CLI
+      - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
+      - run: java -jar jenkins-cli.jar -webSocket list-plugins
+      - run: java -jar jenkins-cli.jar -webSocket list-jobs
+      - run: java -jar jenkins-cli.jar -webSocket create-job job-jcasc < test-resources/jobs/job-jcasc/config.xml
+      - run: java -jar jenkins-cli.jar -webSocket build job-jcasc -f -v
+
   test-passing:
     needs: [ test-mount, test-no-mount ]
     runs-on: ubuntu-latest

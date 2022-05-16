@@ -55,6 +55,8 @@ runs:
           echo 'configuration-as-code' >> $GITHUB_ACTION_PATH/plugins.txt
         fi
       shell: bash
+    - run: cat $GITHUB_ACTION_PATH/plugins.txt
+      shell: bash
     - run: docker compose config
       shell: bash
       env:

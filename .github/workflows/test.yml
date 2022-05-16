@@ -52,6 +52,44 @@ jobs:
       - run: docker compose run --rm jenkins --version
       - run: docker compose exec jenkins jenkins-plugin-cli --list
 
+  test-mount-default:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-18.04 ]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+      - run: curl $JENKINS_URL
+
+      # Environment variables
+      - run: test "$JENKINS_HOME" = "$RUNNER_TEMP/jenkins_home"
+      - run: test -n "$JENKINS_VERSION"
+      - run: test -n "$JENKINS_URL"
+      - run: test -n "$COMPOSE_FILE"
+
+      # Remote Access API
+      # https://www.jenkins.io/doc/book/using/remote-access-api/
+      - run: |
+          crumb=$(curl -sS -c cookie $JENKINS_URL/crumbIssuer/api/json)
+          echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
+      - run: test $(curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie $JENKINS_URL/api/json | jq '.jobs | length') -eq 0
+
+      # Jenkins CLI
+      # https://www.jenkins.io/doc/book/managing/cli/
+      - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
+      - run: java -jar jenkins-cli.jar -webSocket help
+      - run: java -jar jenkins-cli.jar -webSocket list-plugins
+      - run: java -jar jenkins-cli.jar -webSocket list-jobs
+      - run: java -jar jenkins-cli.jar -webSocket create-job job-1 < test-resources/jenkins_home/jobs/job-1/config.xml
+      - run: java -jar jenkins-cli.jar -webSocket create-job job-2 < test-resources/jenkins_home/jobs/job-2/config.xml
+      - run: java -jar jenkins-cli.jar -webSocket list-jobs
+      - run: java -jar jenkins-cli.jar -webSocket build job-1 -f -v
+      - run: java -jar jenkins-cli.jar -webSocket build job-2 -f -v -p param_1=p1
+
   test-no-mount:
     strategy:
       fail-fast: false
@@ -63,6 +101,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./
+        with:
+          jenkins_home: ''
       - run: curl $JENKINS_URL
 
       # Remote Access API

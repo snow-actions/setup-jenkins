@@ -8,6 +8,7 @@ inputs:
   jenkins_home:
     description: jenkins_home path which will mounted to /var/jenkins_home
     required: false
+    default: ${{ runner.temp }}/jenkins_home
   jenkins_image_tag:
     description: Jenkins image tag
     required: false

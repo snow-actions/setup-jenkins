@@ -6,7 +6,9 @@ branding:
   color: blue
 inputs:
   jenkins_home:
-    description: jenkins_home path which will mounted to /var/jenkins_home
+    description: |
+      Jenkins home path which will be mounted to /var/jenkins_home.
+      Set '' if you don't want to mount.
     required: false
     default: ${{ runner.temp }}/jenkins_home
   jenkins_image_tag:
@@ -25,10 +27,8 @@ runs:
         set -x
         if [[ "$JENKINS_HOME" == "" ]]; then
           echo "JENKINS_HOME=" >> $GITHUB_ENV
-        elif [[ "$JENKINS_HOME" == /* ]]; then
-          echo "JENKINS_HOME=${JENKINS_HOME}" >> $GITHUB_ENV
         else
-          echo "JENKINS_HOME=$(pwd)/${JENKINS_HOME}" >> $GITHUB_ENV
+          echo "JENKINS_HOME=$(realpath $JENKINS_HOME)" >> $GITHUB_ENV
         fi
         echo "JENKINS_URL=http://localhost:8080" >> $GITHUB_ENV
       shell: bash
@@ -36,10 +36,12 @@ runs:
         JENKINS_HOME: ${{ inputs.jenkins_home }}
     - name: COMPOSE_FILE
       run: |
-        if [[ "${JENKINS_HOME}" == "" ]]; then
-          echo "COMPOSE_FILE=${GITHUB_ACTION_PATH}/compose.yaml" >> $GITHUB_ENV
+        set -x
+        ACTION_PATH=$(realpath $GITHUB_ACTION_PATH)
+        if [[ "$JENKINS_HOME" == "" ]]; then
+          echo "COMPOSE_FILE=$ACTION_PATH/compose.yaml" >> $GITHUB_ENV
         else
-          echo "COMPOSE_FILE=${GITHUB_ACTION_PATH}/compose.yaml:${GITHUB_ACTION_PATH}/compose.mount.yaml" >> $GITHUB_ENV
+          echo "COMPOSE_FILE=$ACTION_PATH/compose.yaml:$ACTION_PATH/compose.mount.yaml" >> $GITHUB_ENV
         fi
       shell: bash
     - run: |

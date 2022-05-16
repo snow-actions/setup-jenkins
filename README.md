@@ -27,7 +27,7 @@ See [action.yml](action.yml)
 
 | Name | Description | Default | Required |
 | - | - | - | - |
-| `jenkins_home` | jenkins_home path which will be mounted to `/var/jenkins_home` | empty<br>(not mount) | no |
+| `jenkins_home` | Jenkins home path<br>which will be mounted to `/var/jenkins_home`.<br>Set `''` if you don't want to mount. | `${{ runner.temp }}/jenkins_home` | no |
 | `jenkins_image_tag` | [Jenkins image](https://hub.docker.com/r/jenkins/jenkins) tag | `lts-jdk11` | no |
 
 ## Output environment variables

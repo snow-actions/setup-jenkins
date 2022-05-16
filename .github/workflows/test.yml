@@ -26,7 +26,7 @@ jobs:
       # Environment variables
       - run: test -n "$JENKINS_HOME"
       - run: test -n "$JENKINS_VERSION"
-      - run: test -n "$JENKINS_URL"
+      - run: test "$JENKINS_URL" = "http://localhost:8080"
       - run: test -n "$COMPOSE_FILE"
 
       # Remote Access API
@@ -68,7 +68,7 @@ jobs:
       # Environment variables
       - run: test "$JENKINS_HOME" = "$RUNNER_TEMP/jenkins_home"
       - run: test -n "$JENKINS_VERSION"
-      - run: test -n "$JENKINS_URL"
+      - run: test "$JENKINS_URL" = "http://localhost:8080"
       - run: test -n "$COMPOSE_FILE"
 
       # Remote Access API
@@ -104,6 +104,12 @@ jobs:
         with:
           jenkins_home: ''
       - run: curl $JENKINS_URL
+
+      # Environment variables
+      - run: test -n "$JENKINS_HOME"
+      - run: test -n "$JENKINS_VERSION"
+      - run: test "$JENKINS_URL" = "http://localhost:8080"
+      - run: test -n "$COMPOSE_FILE"
 
       # Remote Access API
       # https://www.jenkins.io/doc/book/using/remote-access-api/

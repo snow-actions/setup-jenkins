@@ -36,10 +36,12 @@ runs:
         JENKINS_HOME: ${{ inputs.jenkins_home }}
     - name: COMPOSE_FILE
       run: |
+        set -x
+        ACTION_PATH=$(realpath $GITHUB_ACTION_PATH)
         if [[ "${JENKINS_HOME}" == "" ]]; then
-          echo "COMPOSE_FILE=${GITHUB_ACTION_PATH}/compose.yaml" >> $GITHUB_ENV
+          echo "COMPOSE_FILE=$ACTION_PATH/compose.yaml" >> $GITHUB_ENV
         else
-          echo "COMPOSE_FILE=${GITHUB_ACTION_PATH}/compose.yaml:${GITHUB_ACTION_PATH}/compose.mount.yaml" >> $GITHUB_ENV
+          echo "COMPOSE_FILE=$ACTION_PATH/compose.yaml:$ACTION_PATH/compose.mount.yaml" >> $GITHUB_ENV
         fi
       shell: bash
     - run: |

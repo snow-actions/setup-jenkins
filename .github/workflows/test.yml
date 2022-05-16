@@ -140,7 +140,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - run: cp test-resources/jenkins.yaml test-resources/jenkins_home/
+      - run: cp test-resources/jenkins.yaml $RUNNER_TEMP/jenkins_home/
       - uses: ./
       - run: curl $JENKINS_URL
       - run: ls -la $JENKINS_HOME

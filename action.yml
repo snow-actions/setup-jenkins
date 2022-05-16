@@ -25,7 +25,7 @@ runs:
         set -x
         if [[ "$JENKINS_HOME" == "" ]]; then
           echo "JENKINS_HOME=" >> $GITHUB_ENV
-        elif [[ "$JENKINS_HOME" == "/*" ]]; then
+        elif [[ "$JENKINS_HOME" == /* ]]; then
           echo "JENKINS_HOME=${JENKINS_HOME}" >> $GITHUB_ENV
         else
           echo "JENKINS_HOME=$(pwd)/${JENKINS_HOME}" >> $GITHUB_ENV

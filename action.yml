@@ -49,6 +49,14 @@ runs:
         sudo chown -R 1000:1000 $JENKINS_HOME
       shell: bash
       if: env.JENKINS_HOME != ''
+    - name: Install JCasC plugin
+      run: |
+        if [ -f "$JENKINS_HOME/jenkins.yaml" ]; then
+          echo 'configuration-as-code' >> $GITHUB_ACTION_PATH/plugins.txt
+        fi
+      shell: bash
+    - run: cat $GITHUB_ACTION_PATH/plugins.txt
+      shell: bash
     - run: docker compose config
       shell: bash
       env:

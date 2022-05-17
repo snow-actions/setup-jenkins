@@ -6,3 +6,23 @@ jenkins:
         value: foo
       - key: VARIABLE2
         value: bar
+groovy:
+  - script: >
+      println("This is Groovy script!");
+jobs:
+  - script: |
+      pipelineJob('job-dsl-plugin') {
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('https://github.com/jenkinsci/job-dsl-plugin.git')
+                }
+                branch('*/master')
+              }
+            }
+            lightweight()
+          }
+        }
+      }

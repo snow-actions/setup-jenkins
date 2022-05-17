@@ -49,10 +49,12 @@ runs:
         sudo chown -R 1000:1000 $JENKINS_HOME
       shell: bash
       if: env.JENKINS_HOME != ''
-    - name: Install JCasC plugin
+    - name: Install JCasC plugins
       run: |
         if [ -f "$JENKINS_HOME/jenkins.yaml" ]; then
           echo 'configuration-as-code' >> $GITHUB_ACTION_PATH/plugins.txt
+          echo 'configuration-as-code-groovy' >> $GITHUB_ACTION_PATH/plugins.txt
+          echo 'job-dsl' >> $GITHUB_ACTION_PATH/plugins.txt
         fi
       shell: bash
     - run: cat $GITHUB_ACTION_PATH/plugins.txt

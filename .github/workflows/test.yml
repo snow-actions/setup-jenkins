@@ -160,7 +160,7 @@ jobs:
       - run: |
           crumb=$(curl -sS -c cookie $JENKINS_URL/crumbIssuer/api/json)
           echo "CRUMB_HEADER=$(echo $crumb | jq -r '.crumbRequestField'): $(echo $crumb | jq -r '.crumb')" >> $GITHUB_ENV
-      - run: test $(curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie $JENKINS_URL/api/json | jq '.jobs | length') -eq 0
+      - run: test $(curl -sS -X POST -H "${CRUMB_HEADER}" -b cookie $JENKINS_URL/api/json | jq '.jobs | length') -eq 1
 
       # Jenkins CLI
       - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar

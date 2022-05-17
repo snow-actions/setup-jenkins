@@ -8,7 +8,7 @@ A few features are available.
 ## Usage
 
 1. Copy `$JENKINS_HOME/jobs/*/config.xml` from existing Jenkins to `jenkins_home/` in a repository
-1. You can put `jenkins_home/jenkins.yaml` if [Jenkins Configuration as Code](https://www.jenkins.io/projects/jcasc/) (optional)
+1. You can put `jenkins_home/jenkins.yaml` if [Jenkins Configuration as Code (JCasC)](#Jenkins+Configuration+as+Code+%28JCasC%29) (optional)
 1. Create a workflow with the jenkins_home path
 
 ```yml
@@ -42,7 +42,20 @@ See [action.yml](action.yml)
 
 ## Examples
 
+### Workflow
+
 See [test.yml](.github/workflows/test.yml)
+
+### Jenkins Configuration as Code (JCasC)
+
+See [jenkins.yaml](test-resources/jenkins.yaml)
+
+Documents
+- https://www.jenkins.io/doc/book/managing/casc/
+- https://www.jenkins.io/projects/jcasc/
+- https://plugins.jenkins.io/configuration-as-code/
+- https://plugins.jenkins.io/configuration-as-code-groovy/
+- https://plugins.jenkins.io/job-dsl/
 
 ## Supported
 

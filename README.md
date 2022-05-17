@@ -14,7 +14,7 @@ or you can put `jenkins_home/jenkins.yaml` if [Jenkins Configuration as Code (JC
 ```yml
 steps:
   - uses: actions/checkout@v3
-  - uses: snow-actions/setup-jenkins@v0.3.0
+  - uses: snow-actions/setup-jenkins@v0.4.0
     with:
       jenkins_home: jenkins_home
   - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar

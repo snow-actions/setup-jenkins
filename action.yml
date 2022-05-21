@@ -5,16 +5,19 @@ branding:
   icon: circle
   color: blue
 inputs:
+  jenkins_image_tag:
+    description: Jenkins image tag
+    required: false
+    default: lts-jdk11
   jenkins_home:
     description: |
       Jenkins home path which will be mounted to /var/jenkins_home.
       Set '' if you don't want to mount.
     required: false
     default: ${{ runner.temp }}/jenkins_home
-  jenkins_image_tag:
-    description: Jenkins image tag
+  env_file:
+    description: Jenkins container env_file path
     required: false
-    default: lts-jdk11
 runs:
   using: composite
   steps:
@@ -38,12 +41,21 @@ runs:
       run: |
         set -x
         ACTION_PATH=$(realpath $GITHUB_ACTION_PATH)
-        if [[ "$JENKINS_HOME" == "" ]]; then
-          echo "COMPOSE_FILE=$ACTION_PATH/compose.yaml" >> $GITHUB_ENV
-        else
-          echo "COMPOSE_FILE=$ACTION_PATH/compose.yaml:$ACTION_PATH/compose.mount.yaml" >> $GITHUB_ENV
+        COMPOSE_FILE=$ACTION_PATH/compose.yaml
+
+        if [[ "$JENKINS_HOME" != "" ]]; then
+          COMPOSE_FILE=$COMPOSE_FILE:$ACTION_PATH/compose.mount.yaml
         fi
+
+        if [[ "$ENV_FILE" != "" ]]; then
+          echo "ENV_FILE=$(realpath $ENV_FILE)" >> $GITHUB_ENV
+          COMPOSE_FILE=$COMPOSE_FILE:$ACTION_PATH/compose.env.yaml
+        fi
+
+        echo "COMPOSE_FILE=$COMPOSE_FILE" >> $GITHUB_ENV
       shell: bash
+      env:
+        ENV_FILE: ${{ inputs.env_file }}
     - run: |
         mkdir -p $JENKINS_HOME
         sudo chown -R 1000:1000 $JENKINS_HOME

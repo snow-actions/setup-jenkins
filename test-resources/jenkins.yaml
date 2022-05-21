@@ -1,3 +1,11 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - string:
+          id: secret_text
+          secret: ${SECRET_TEXT}
+          scope: GLOBAL
 jenkins:
   globalNodeProperties:
   - envVars:
@@ -23,6 +31,29 @@ jobs:
               }
             }
             lightweight()
+          }
+        }
+      }
+  - script: |
+      pipelineJob('job-dsl-plugin-script') {
+        definition {
+          cps {
+            script('''\
+              pipeline {
+                  agent any
+                  environment {
+                      SECRET_TEXT = credentials('secret_text')
+                  }
+                  stages {
+                      stage('secrets') {
+                          steps {
+                              echo env.SECRET_TEXT
+                          }
+                      }
+                  }
+              }
+              '''.stripIndent())
+            sandbox()
           }
         }
       }

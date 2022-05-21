@@ -28,8 +28,8 @@ See [action.yml](action.yml)
 
 | Name | Description | Default | Required |
 | - | - | - | - |
-| `jenkins_home` | Jenkins home path<br>which will be mounted to `/var/jenkins_home`.<br>Set `''` if you don't want to mount. | `${{ runner.temp }}/jenkins_home` | no |
 | `jenkins_image_tag` | [Jenkins image](https://hub.docker.com/r/jenkins/jenkins) tag | `lts-jdk11` | no |
+| `jenkins_home` | Jenkins home path<br>which will be mounted to `/var/jenkins_home`.<br>Set `''` if you don't want to mount. | `${{ runner.temp }}/jenkins_home` | no |
 
 ## Output environment variables
 

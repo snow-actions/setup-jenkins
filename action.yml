@@ -5,16 +5,16 @@ branding:
   icon: circle
   color: blue
 inputs:
+  jenkins_image_tag:
+    description: Jenkins image tag
+    required: false
+    default: lts-jdk11
   jenkins_home:
     description: |
       Jenkins home path which will be mounted to /var/jenkins_home.
       Set '' if you don't want to mount.
     required: false
     default: ${{ runner.temp }}/jenkins_home
-  jenkins_image_tag:
-    description: Jenkins image tag
-    required: false
-    default: lts-jdk11
 runs:
   using: composite
   steps:

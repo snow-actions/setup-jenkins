@@ -2,19 +2,18 @@
 
 # Setup Jenkins
 
-Set up Jenkins container (PoC).
-A few features are available.
+Set up Jenkins container.
 
 ## Usage
 
-1. Copy `$JENKINS_HOME/jobs/*/config.xml` from existing Jenkins to `jenkins_home/` in a repository  
+1. Copy `$JENKINS_HOME/jobs/*/config.xml` from existing Jenkins to `jenkins_home/` in your repository  
 or you can put `jenkins_home/jenkins.yaml` if [Jenkins Configuration as Code (JCasC)](#jenkins-configuration-as-code-jcasc)
 1. Create a workflow with the jenkins_home path
 
 ```yml
 steps:
   - uses: actions/checkout@v3
-  - uses: snow-actions/setup-jenkins@v0.4.0
+  - uses: snow-actions/setup-jenkins@v1.0.0
     with:
       jenkins_home: jenkins_home
   - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar

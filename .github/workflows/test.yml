@@ -218,7 +218,7 @@ jobs:
       - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
       - run: java -jar jenkins-cli.jar -webSocket list-plugins
       - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -eq 0
-      - run: docker compose down
+      - run: docker compose down --volumes --rmi all
       - uses: ./
         with:
           plugins: |

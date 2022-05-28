@@ -18,6 +18,10 @@ inputs:
   env_file:
     description: Jenkins container env_file path
     required: false
+  plugins:
+    description: Override plugins.txt
+    required: false
+    default: '@'
 runs:
   using: composite
   steps:
@@ -69,6 +73,12 @@ runs:
           echo 'job-dsl' >> $GITHUB_ACTION_PATH/plugins.txt
         fi
       shell: bash
+    - name: Override plugins.txt
+      run: echo "$PLUGINS" > $GITHUB_ACTION_PATH/plugins.txt
+      shell: bash
+      env:
+        PLUGINS: ${{ inputs.plugins }}
+      if: inputs.plugins != '@'
     - run: cat $GITHUB_ACTION_PATH/plugins.txt
       shell: bash
     - run: docker compose config

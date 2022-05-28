@@ -202,8 +202,32 @@ jobs:
       - run: java -jar jenkins-cli.jar -webSocket list-jobs
       - run: java -jar jenkins-cli.jar -webSocket build job-dsl-plugin-script -f -v
 
+  test-plugins:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-18.04 ]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          plugins: ''
+      - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
+      - run: java -jar jenkins-cli.jar -webSocket list-plugins
+      - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -eq 0
+      - uses: ./
+        with:
+          plugins: |
+            timestamper
+            git
+      - run: java -jar jenkins-cli.jar -webSocket list-plugins
+      - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -eq 2
+
   test-passing:
-    needs: [ test-mount, test-no-mount, test-jcasc, test-jcasc-with-secrets ]
+    needs: [ test-mount, test-no-mount, test-jcasc, test-jcasc-with-secrets, test-plugins ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
 

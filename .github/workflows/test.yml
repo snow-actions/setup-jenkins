@@ -214,21 +214,32 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./
         with:
+          plugins: |
+            timestamper
+            git
+      - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
+      - run: java -jar jenkins-cli.jar -webSocket list-plugins
+      - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -eq 2
+
+  test-no-plugins:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-18.04 ]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
           plugins: ''
       - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
       - run: java -jar jenkins-cli.jar -webSocket list-plugins
       - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -eq 0
-      - run: docker compose down --volumes --rmi all
-      - uses: ./
-        with:
-          plugins: |
-            timestamper
-            git
-      - run: java -jar jenkins-cli.jar -webSocket list-plugins
-      - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -eq 2
 
   test-passing:
-    needs: [ test-mount, test-no-mount, test-jcasc, test-jcasc-with-secrets, test-plugins ]
+    needs: [ test-mount, test-no-mount, test-jcasc, test-jcasc-with-secrets, test-plugins, test-no-plugins ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
 

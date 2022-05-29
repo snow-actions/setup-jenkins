@@ -21,6 +21,37 @@ steps:
   - run: java -jar jenkins-cli.jar -webSocket build job-1 -f -v -p param_1=p1
 ```
 
+### Install plugins
+
+Recommended plugins are installed by default.
+
+#### Add plugins
+
+Install plugins in addition to recommended plugins.
+
+```yml
+steps:
+  - uses: snow-actions/setup-jenkins@v1.0.0
+  - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
+  - name: Short name
+    run: java -jar jenkins-cli.jar -webSocket install-plugin git -deploy
+  - name: URL
+    run: java -jar jenkins-cli.jar -webSocket install-plugin https://updates.jenkins.io/latest/http_request.hpi -deploy
+```
+
+#### Override plugins
+
+Recommended plugins are not installed.
+
+```yml
+steps:
+  - uses: snow-actions/setup-jenkins@v1.0.0
+    with:
+      plugins: |
+        git
+        http_request
+```
+
 ## Inputs
 
 See [action.yml](action.yml)

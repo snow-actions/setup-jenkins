@@ -24,6 +24,8 @@ jobs:
           set -x
           tag=$(gh api /repos/${GITHUB_REPOSITORY}/releases/latest --jq '.tag_name')
           echo "LATEST_VERSION=$tag" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Next version
         id: next-version
         run: |

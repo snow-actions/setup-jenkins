@@ -24,6 +24,8 @@ jobs:
           set -x
           tag=$(gh api /repos/${GITHUB_REPOSITORY}/releases/latest --jq '.tag_name')
           echo "LATEST_VERSION=$tag" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Next version
         id: next-version
         run: |
@@ -57,7 +59,7 @@ jobs:
         id: version
         run: |
           set -x
-          sed -i -e "s/${GITHUB_REPOSITORY}@${LATEST_VERSION}/${GITHUB_REPOSITORY}@${NEXT_VERSION}/g" README.md
+          sed -i -e "s|${GITHUB_REPOSITORY}@${LATEST_VERSION}|${GITHUB_REPOSITORY}@${NEXT_VERSION}|g" README.md
           git diff
       - uses: snow-actions/git-config-user@v1.0.0
       - id: generate-token
@@ -71,7 +73,7 @@ jobs:
           branch="release/${NEXT_VERSION}"
           git switch -c ${branch}
           git add .
-          git commit -m "${VERSION}"
+          git commit -m "${NEXT_VERSION}"
           git push origin ${branch}
           gh pr create --base ${GITHUB_REF_NAME} --head ${branch} --assignee ${GITHUB_ACTOR} --title ${NEXT_VERSION} --body ''
         env:

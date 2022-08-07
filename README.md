@@ -13,7 +13,7 @@ or you can put `jenkins_home/jenkins.yaml` if [Jenkins Configuration as Code (JC
 ```yml
 steps:
   - uses: actions/checkout@v3
-  - uses: snow-actions/setup-jenkins@v1.0.0
+  - uses: snow-actions/setup-jenkins@v1.1.0
     with:
       jenkins_home: jenkins_home
   - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
@@ -31,7 +31,7 @@ Install plugins in addition to recommended plugins.
 
 ```yml
 steps:
-  - uses: snow-actions/setup-jenkins@v1.0.0
+  - uses: snow-actions/setup-jenkins@v1.1.0
   - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
   - name: Short name
     run: java -jar jenkins-cli.jar -webSocket install-plugin git -deploy
@@ -45,7 +45,7 @@ Recommended plugins are not installed.
 
 ```yml
 steps:
-  - uses: snow-actions/setup-jenkins@v1.0.0
+  - uses: snow-actions/setup-jenkins@v1.1.0
     with:
       plugins: |
         git

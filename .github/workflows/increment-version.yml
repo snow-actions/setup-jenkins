@@ -59,7 +59,7 @@ jobs:
         id: version
         run: |
           set -x
-          sed -i -e "s/${GITHUB_REPOSITORY}@${LATEST_VERSION}/${GITHUB_REPOSITORY}@${NEXT_VERSION}/g" README.md
+          sed -i -e "s|${GITHUB_REPOSITORY}@${LATEST_VERSION}|${GITHUB_REPOSITORY}@${NEXT_VERSION}|g" README.md
           git diff
       - uses: snow-actions/git-config-user@v1.0.0
       - id: generate-token

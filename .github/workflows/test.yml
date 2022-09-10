@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-18.04 ]
+        os: [ ubuntu-22.04, ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
 
@@ -56,7 +56,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-18.04 ]
+        os: [ ubuntu-22.04, ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
 
@@ -83,7 +83,7 @@ jobs:
       - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
       - run: java -jar jenkins-cli.jar -webSocket help
       - run: java -jar jenkins-cli.jar -webSocket list-plugins
-      - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -eq 83
+      - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -gt 50
       - run: java -jar jenkins-cli.jar -webSocket list-jobs
       - run: java -jar jenkins-cli.jar -webSocket create-job job-1 < test-resources/jenkins_home/jobs/job-1/config.xml
       - run: java -jar jenkins-cli.jar -webSocket create-job job-2 < test-resources/jenkins_home/jobs/job-2/config.xml
@@ -95,7 +95,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-18.04 ]
+        os: [ ubuntu-22.04, ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
 
@@ -135,7 +135,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-18.04 ]
+        os: [ ubuntu-22.04, ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
 
@@ -174,7 +174,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-18.04 ]
+        os: [ ubuntu-22.04, ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
 
@@ -207,7 +207,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-18.04 ]
+        os: [ ubuntu-22.04, ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
 
@@ -220,13 +220,13 @@ jobs:
             git
       - run: wget $JENKINS_URL/jnlpJars/jenkins-cli.jar
       - run: java -jar jenkins-cli.jar -webSocket list-plugins
-      - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -eq 25
+      - run: test $(java -jar jenkins-cli.jar -webSocket list-plugins | wc -l) -gt 20
 
   test-no-plugins:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-18.04 ]
+        os: [ ubuntu-22.04, ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
 

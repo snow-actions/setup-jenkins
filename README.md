@@ -93,8 +93,8 @@ Documents
 
 ### Runners
 
+- `ubuntu-22.04`
 - `ubuntu-20.04`
-- `ubuntu-18.04`
 - `self-hosted`
 
 ### Events
